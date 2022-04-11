@@ -6,4 +6,5 @@
 *.pyc
 .ipynb_checkpoints/
 CMSSW_10_2_13/
+!histograms_injSig_PDinj_NA3p5.root
 
