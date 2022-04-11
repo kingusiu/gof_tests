@@ -4,4 +4,6 @@
 *.txt
 *.out
 *.pyc
+.ipynb_checkpoints/
+CMSSW_10_2_13/
 
