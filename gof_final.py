@@ -34,7 +34,7 @@ def makeWS(data_rej,data_acc,signal_rej,signal_acc, outname,quantile,qr_unc_file
   
   # Name efficiency per quantile to allow for combination
   w.factory('eff_%s[%f]'%(quantile,efficiency))
-  w.var('eff_%s'%quantile).setConstant(True)
+  w.var('eff_%s'%quantile).setConstant(True) # set constant efficiency over all bins for expected/model
 
   
   empty_hist = rt.TH1D('empty_hist','empty_hist', data_rej.GetNbinsX(), data_rej.GetXaxis().GetXbins().GetArray())
@@ -57,7 +57,7 @@ def makeWS(data_rej,data_acc,signal_rej,signal_acc, outname,quantile,qr_unc_file
       w.var('crBin%i_In'%iBinX).setConstant(True)
       #Name per-bin background estimate per quantile to allow for combination
       w.factory('crBin_q%s_%i[0,-10,10]'%(quantile,iBinX))
-      w.var('crBin_q%s_%i'%(quantile,iBinX)).setConstant(False)
+      w.var('crBin_q%s_%i'%(quantile,iBinX)).setConstant(False) # set floating mu for observed/data
       if rej_bin !=  0.:
         power = 1/rt.TMath.Sqrt(rej_bin)
       else:
@@ -155,15 +155,17 @@ def makeWS(data_rej,data_acc,signal_rej,signal_acc, outname,quantile,qr_unc_file
 if __name__ == "__main__":
     # Input: Different signals and trainings with varying amount of injected signal
     signal  = 'sig_GtoWW35naReco'
-    #xsecs   = [0,20,40,60,80,100]
-    xsecs   = [0,100]
+    xsecs   = [0,20,40,60,80,100]
+    #xsecs   = [0,100]
+    toys_N = 200 #int(1e4)
 
-    quantiles = [0.7, 0.5, 0.3, 0.1, 0.01]
+    #quantiles = [0.7, 0.5, 0.3, 0.1, 0.01]
+    quantiles = [0.7, 0.5, 0.3, 0.1]
 
     doAllQuantiles = True
     combineAll     = False
 
-    tag = 'PDinj_NA3p5'
+    tag = 'PDinj_NA3p5_r7env'
     #hist_file_name = 'histograms_'+tag+'.root'
     hist_file_name = "histograms_injSig_{}.root".format(tag)
     f = rt.TFile.Open(hist_file_name,"r")  
@@ -199,7 +201,7 @@ if __name__ == "__main__":
                 os.system('combine -M GoodnessOfFit --algo saturated --fixedSignalStrength 0 -d datacard_ws_{PREFIX}_ratio.txt -n Ratio_gof_{PREFIX} --dataset data_obs -v 2'.format(PREFIX=prefix))
 
                 for i in range(1):
-                  os.system('combine -M GoodnessOfFit --algo saturated --fixedSignalStrength 0 -d datacard_ws_{PREFIX}_ratio.txt -t 200 --toysFreq -n Ratio_gof_toys_{PREFIX}  --dataset data_obs -s {S} -v 0'.format(PREFIX=prefix,S=40+i))
+                  os.system('combine -M GoodnessOfFit --algo saturated --fixedSignalStrength 0 -d datacard_ws_{PREFIX}_ratio.txt -t {toys_N} --toysFreq -n Ratio_gof_toys_{PREFIX}  --dataset data_obs -s {S} -v 0'.format(PREFIX=prefix,S=40+i, toys_N=toys_N))
                 os.system('hadd -f higgsCombineRatio_gof_toys_{PREFIX}.GoodnessOfFit.mH120.ALLTOYS.root higgsCombineRatio_gof_toys_{PREFIX}.GoodnessOfFit.mH120.4*.root'.format(PREFIX=prefix))
 
         for xs in xsecs:
