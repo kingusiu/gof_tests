@@ -47,3 +47,30 @@ def get_stats_test_fig_dir(params):
 	data_dir = os.path.join(results_fig_basedir,'qr_run_'+str(int(params.qr_run_n)),'env_run_'+str(int(params.env_run_n)),'poly_run_'+str(int(params.poly_run_n)), results_stats_test_subdir)
 	pathlib.Path(data_dir).mkdir(parents=True, exist_ok=True)
 	return data_dir
+
+
+# *********************************************************** #
+#                  EVENT SAMPLE NUMBERS                       #
+# *********************************************************** #
+
+gen_events_number_dir = {
+	
+	'qcdSide' : 134366091,
+	'qcdSig' : 199435365,
+	'qcdSideExt' : 90490645,
+	'qcdSigExt' : 134264102,
+	'GtoWW15na' : 979422,
+	'GtoWW15br' : 978558,
+	'GtoWW25na' : 983609,
+	'GtoWW25br' : 982588,
+	'GtoWW35na' : 982038,
+	'GtoWW35br' : 972050,
+	'GtoWW45na' : 976979,
+	'GtoWW45br' : 969741,
+	'AtoHZ15' : 99935,
+	'AtoHZ25' : 99977,
+	'AtoHZ35' : 99979,
+	'AtoHZ45' : 99954,
+}
+
+gen_events_number_dir['qcdAll'] = gen_events_number_dir['qcdSide']+gen_events_number_dir['qcdSig']+gen_events_number_dir['qcdSideExt']+gen_events_number_dir['qcdSigExt']
